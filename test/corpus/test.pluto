@@ -1,0 +1,295 @@
+==================
+Basic Assignment
+==================
+
+x = 42
+
+---
+
+(source_file
+  (assignment
+    left: (identifier)
+    right: (number)))
+
+==================
+Multiple Assignment
+==================
+
+x y = "hello"
+
+---
+
+(source_file
+  (assignment
+    left: (identifier)
+    left: (identifier)
+    right: (string)))
+
+==================
+Basic Command
+==================
+
+print "hello"
+
+---
+(source_file
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (string))))
+
+==================
+Multiple Arguments
+==================
+
+run x y z
+
+---
+(source_file
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (identifier)
+      (identifier)
+      (identifier))))
+
+==================
+Expression Command
+==================
+
+add (5 + 3) * 2
+
+---
+(source_file
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (binary_operation
+        left: (parenthesized_expression
+          (binary_operation
+            left: (number)
+            operator: (operator)
+            right: (number)))
+        operator: (operator)
+        right: (number)))))
+
+==================
+Command Test
+==================
+
+print "hello"
+
+run x y z
+
+---
+(source_file
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (string)))
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (identifier)
+      (identifier)
+      (identifier))))
+
+
+==================
+Boolean Support
+==================
+
+flag = true
+enabled = false
+
+---
+(source_file
+  (assignment
+    left: (identifier)
+    right: (boolean))
+  (assignment
+    left: (identifier)
+    right: (boolean)))
+
+==================
+No Arguments Command
+==================
+
+exit
+
+---
+(source_file
+  (command
+    name: (identifier)))
+
+==================
+Complex Expressions
+==================
+
+result = (x + y) * (z - w)
+
+---
+(source_file
+  (assignment
+    left: (identifier)
+    right: (binary_operation
+      left: (parenthesized_expression
+        (binary_operation
+          left: (identifier)
+          operator: (operator)
+          right: (identifier)))
+      operator: (operator)
+      right: (parenthesized_expression
+        (binary_operation
+          left: (identifier)
+          operator: (operator)
+          right: (identifier))))))
+
+==================
+Unary Operations
+==================
+
+neg = -x
+pos = +42
+
+---
+(source_file
+  (assignment
+    left: (identifier)
+    right: (unary_operation
+      operator: (operator)
+      argument: (identifier)))
+  (assignment
+    left: (identifier)
+    right: (unary_operation
+      operator: (operator)
+      argument: (number))))
+
+==================
+Mixed Command Arguments
+==================
+
+process "file.txt" 42 true
+
+---
+(source_file
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (string)
+      (number)
+      (boolean))))
+
+==================
+Nested Parentheses
+==================
+
+calc ((x + y) * (z + w))
+
+---
+(source_file
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (parenthesized_expression
+        (binary_operation
+          left: (parenthesized_expression
+            (binary_operation
+              left: (identifier)
+              operator: (operator)
+              right: (identifier)))
+          operator: (operator)
+          right: (parenthesized_expression
+            (binary_operation
+              left: (identifier)
+              operator: (operator)
+              right: (identifier))))))))
+
+==================
+Scientific Notation
+==================
+
+large = 1.5e10
+small = 2.3e-5
+
+---
+(source_file
+  (assignment
+    left: (identifier)
+    right: (number))
+  (assignment
+    left: (identifier)
+    right: (number)))
+
+==================
+Single Quote Strings
+==================
+
+msg = 'Hello World'
+
+---
+(source_file
+  (assignment
+    left: (identifier)
+    right: (string)))
+
+==================
+Comments
+==================
+
+# This is a comment
+x = 42  # Inline comment
+
+---
+(source_file
+  (comment)
+  (assignment
+    left: (identifier)
+    right: (number))
+  (comment))
+
+==================
+Comparison Operations
+==================
+
+check x > y
+validate a == b
+
+---
+(source_file
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (binary_operation
+        left: (identifier)
+        operator: (operator)
+        right: (identifier))))
+  (command
+    name: (identifier)
+    arguments: (argument_list
+      (binary_operation
+        left: (identifier)
+        operator: (operator)
+        right: (identifier)))))
+
+==================
+Logical Operations
+==================
+
+result = flag && enabled
+check = x || y
+
+---
+(source_file
+  (assignment
+    left: (identifier)
+    right: (binary_operation
+      left: (identifier)
+      operator: (operator)
+      right: (identifier)))
+  (assignment
+    left: (identifier)
+    right: (binary_operation
+      left: (identifier)
+      operator: (operator)
+      right: (identifier))))

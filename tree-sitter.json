@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "pluto",
+      "camelcase": "Pluto",
+      "title": "PLUTO",
+      "scope": "source.pluto",
+      "file-types": [
+        "pluto"
+      ],
+      "injection-regex": "^pluto$",
+      "class-name": "TreeSitterPluto"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for the PLUTO scripting language used in LibreCube, with Neovim support",
+    "authors": [
+      {
+        "name": "Shaurya Gaur",
+        "email": "shauryagaur07@gmail.com",
+        "url": "https://s7g4.github.io/Portfolio/"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/s7g4/pluto-neovim"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}

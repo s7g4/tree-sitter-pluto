@@ -1,0 +1,32 @@
+# This is a Pluto test file
+# Demonstrating various language features
+
+# Variable assignments
+name = "Pluto"
+version = 1.0
+is_active = true
+
+# Commands with arguments
+print "Hello, World!"
+echo name version
+run "ls -la"
+
+# Arithmetic operations
+result = 10 + 20 * 3
+power = 2 ** 8
+comparison = result > 100
+
+# Conditional expressions
+status = is_active ? "running" : "stopped"
+
+# Function calls with complex arguments
+process_data (name + " v" + version) result status
+
+# Comments and multi-line expressions
+# This demonstrates the syntax highlighting
+complex_calc = (
+    (10 + 20) * 3 - 5
+) / 2
+
+# Boolean operations
+final_check = is_active && result > 50 || status == "running"

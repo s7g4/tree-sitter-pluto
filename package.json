@@ -1,0 +1,62 @@
+{
+  "name": "tree-sitter-pluto",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for the PLUTO scripting langauge used in LibreCube",
+  "repository": "https://github.com/tree-sitter/tree-sitter-pluto",
+  "license": "MIT",
+  "author": {
+    "name": "Shaurya Gaur",
+    "email": "shauryagaur07@gmail.com",
+    "url": "https://s7g4.github.io/Portfolio/"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.pluto",
+      "file-types": ["pluto"],
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm"
+    }
+  ],
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "keywords": [
+    "incremental",
+    "parsing",
+    "tree-sitter",
+    "pluto"
+  ],
+  "files": [
+    "grammar.js",
+    "tree-sitter.json",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**",
+    "*.wasm"
+  ],
+  "dependencies": {
+    "node-addon-api": "^8.5.0",
+    "node-gyp-build": "^4.8.2"
+  },
+  "devDependencies": {
+    "prebuildify": "^6.0.1",
+    "tree-sitter-cli": "^0.25.6"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.1"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "install": "node-gyp-build",
+    "prestart": "tree-sitter build --wasm",
+    "start": "tree-sitter playground",
+    "test": "tree-sitter test",
+    "build": "tree-sitter generate && node-gyp rebuild",
+    "build-wasm": "tree-sitter build-wasm"
+  }
+}
