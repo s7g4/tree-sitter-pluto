@@ -1,59 +1,112 @@
+; =============================================================================
+; PLUTO Language Syntax Highlighting
+; =============================================================================
+
 ; Comments
 (comment) @comment
-(block_comment) @comment
 
-; Keywords - only using string literals that exist in our grammar
-"if" @keyword.control
-"else" @keyword.control
-"while" @keyword.control
-"for" @keyword.control
-"function" @keyword.function
-"in" @keyword
+; Keywords - Procedure structure
+"procedure" @keyword.function
+"preconditions" @keyword
+"main" @keyword
+"confirmation" @keyword
+"end" @keyword
 
-; Operators
-(operator) @operator
+; Keywords - Control flow
+"if" @keyword.control.conditional
+"then" @keyword.control.conditional
+"elsif" @keyword.control.conditional
+"else" @keyword.control.conditional
+"while" @keyword.control.repeat
+"for" @keyword.control.repeat
+"do" @keyword.control.repeat
+"in" @keyword.control.repeat
+
+; Keywords - Activity operations
+"initiate" @keyword.function
+"confirm" @keyword.function
+"and" @keyword.operator
+"wait" @keyword.function
+"until" @keyword.function
+
+; Operators - Arithmetic
+[
+  "+"
+  "-"
+  "*"
+  "/"
+  "mod"
+  "**"
+] @operator.arithmetic
+
+; Operators - Comparison
+[
+  "=="
+  "!="
+  "<>"
+  "<"
+  ">"
+  "<="
+  ">="
+] @operator.comparison
+
+; Operators - Logical
+[
+  "and"
+  "or"
+  "not"
+] @operator.logical
 
 ; Assignment operator
-"=" @operator
+"=" @operator.assignment
 
 ; Punctuation
 [
   "("
   ")"
-  "["
-  "]"
-  "{"
-  "}"
+  ";"
   ","
-  ":"
-  "?"
-] @punctuation.bracket
+  "."
+] @punctuation.delimiter
 
 ; Literals
 (string) @string
 (number) @number
-(boolean) @constant.builtin
+(boolean) @constant.builtin.boolean
+
+; Units and measurements
+(unit) @type.builtin
 
 ; Identifiers
 (identifier) @variable
 
+; Procedure names
+(procedure_name (identifier) @function)
+
+; Activity references
+(activity_reference (identifier) @function.call)
+
+; Property access
+(property_access 
+  (identifier) @variable
+  (identifier) @property) @variable.member
+
 ; Function calls
-(command
-  name: (identifier) @function.call)
+(function_call 
+  (identifier) @function.call)
 
-; Function definitions
-(function_definition
-  name: (identifier) @function)
+; Parameter names in function calls
+(parameter 
+  (identifier) @parameter
+  "=" @operator.assignment)
 
-; Assignment targets
-(assignment
-  left: (identifier) @variable)
+; Value with unit
+(value_with_unit
+  (number) @number
+  (unit) @type.builtin)
 
-; Array and object literals
-(array_literal) @punctuation.bracket
-(object_literal) @punctuation.bracket
+; String literals
+(string) @string
 
-; Built-in constants are handled by the boolean token above
-
-; Error nodes
+; Error nodes for debugging
 (ERROR) @error

@@ -1,19 +1,22 @@
-; Block structures
-(block) @fold
+; =============================================================================
+; PLUTO Language Code Folding
+; =============================================================================
 
-; Function definitions
-(function_definition) @fold
+; Procedure blocks
+(procedure) @fold
 
-; Control flow blocks
-(if_statement) @fold
+; Procedure sections
+(preconditions_block) @fold
+(main_block) @fold
+(confirmation_block) @fold
+
+; Control flow structures
+(conditional) @fold
 (while_loop) @fold
 (for_loop) @fold
 
-; Object literals
-(object_literal) @fold
+; Multi-line parameter lists
+(parameter_list) @fold
 
-; Array literals
-(array_literal) @fold
-
-; Multi-line comments
-(block_comment) @fold
+; Comments (for multi-line comment blocks)
+(comment) @fold

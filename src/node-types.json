@@ -1,96 +1,6 @@
 [
   {
-    "type": "argument_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "binary_operation",
-          "named": true
-        },
-        {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "parenthesized_expression",
-          "named": true
-        },
-        {
-          "type": "string",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "array_literal",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_operation",
-          "named": true
-        },
-        {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "conditional_expression",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "object_literal",
-          "named": true
-        },
-        {
-          "type": "parenthesized_expression",
-          "named": true
-        },
-        {
-          "type": "postfix_operation",
-          "named": true
-        },
-        {
-          "type": "string",
-          "named": true
-        },
-        {
-          "type": "unary_operation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "array_type",
+    "type": "activity_call",
     "named": true,
     "fields": {},
     "children": {
@@ -98,7 +8,53 @@
       "required": true,
       "types": [
         {
-          "type": "type_expression",
+          "type": "confirm_only",
+          "named": true
+        },
+        {
+          "type": "initiate_and_confirm",
+          "named": true
+        },
+        {
+          "type": "initiate_only",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "activity_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "property_access",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "additive_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "additive_expression",
+          "named": true
+        },
+        {
+          "type": "multiplicative_expression",
           "named": true
         }
       ]
@@ -107,197 +63,99 @@
   {
     "type": "assignment",
     "named": true,
-    "fields": {
-      "left": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "right": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type_annotation",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
-    "type": "binary_operation",
+    "type": "boolean",
     "named": true,
-    "fields": {
-      "left": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "operator",
-            "named": true
-          }
-        ]
-      },
-      "right": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      }
+    "fields": {}
+  },
+  {
+    "type": "conditional",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activity_call",
+          "named": true
+        },
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "else_clause",
+          "named": true
+        },
+        {
+          "type": "elsif_clause",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
+          "named": true
+        }
+      ]
     }
   },
   {
-    "type": "block",
+    "type": "confirm_only",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activity_reference",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "parameter_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "confirmation_block",
     "named": true,
     "fields": {},
     "children": {
@@ -305,27 +163,322 @@
       "required": false,
       "types": [
         {
+          "type": "activity_call",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
         {
-          "type": "block_comment_statement",
+          "type": "conditional",
           "named": true
         },
         {
-          "type": "command",
+          "type": "expression_statement",
           "named": true
         },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "else_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "activity_call",
+          "named": true
+        },
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "elsif_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activity_call",
+          "named": true
+        },
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "equality_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "equality_expression",
+          "named": true
+        },
+        {
+          "type": "relational_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "exponential_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "exponential_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "logical_or_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "for_loop",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activity_call",
+          "named": true
+        },
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "function_call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "parameter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "initiate_and_confirm",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activity_reference",
+          "named": true
+        },
+        {
+          "type": "parameter_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "initiate_only",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activity_reference",
+          "named": true
+        },
+        {
+          "type": "parameter_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "logical_and_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "equality_expression",
+          "named": true
+        },
+        {
+          "type": "logical_and_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "logical_or_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "logical_and_expression",
+          "named": true
+        },
+        {
+          "type": "logical_or_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "loop",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
         {
           "type": "for_loop",
-          "named": true
-        },
-        {
-          "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "if_statement",
           "named": true
         },
         {
@@ -336,563 +489,7 @@
     }
   },
   {
-    "type": "block_comment_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "command",
-    "named": true,
-    "fields": {
-      "arguments": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "argument_list",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "computed_property",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_operation",
-          "named": true
-        },
-        {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "conditional_expression",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "object_literal",
-          "named": true
-        },
-        {
-          "type": "parenthesized_expression",
-          "named": true
-        },
-        {
-          "type": "postfix_operation",
-          "named": true
-        },
-        {
-          "type": "string",
-          "named": true
-        },
-        {
-          "type": "unary_operation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "conditional_expression",
-    "named": true,
-    "fields": {
-      "alternative": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "condition": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "consequence": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "for_loop",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "assignment",
-            "named": true
-          },
-          {
-            "type": "block",
-            "named": true
-          },
-          {
-            "type": "block_comment_statement",
-            "named": true
-          },
-          {
-            "type": "command",
-            "named": true
-          },
-          {
-            "type": "for_loop",
-            "named": true
-          },
-          {
-            "type": "function_definition",
-            "named": true
-          },
-          {
-            "type": "if_statement",
-            "named": true
-          },
-          {
-            "type": "while_loop",
-            "named": true
-          }
-        ]
-      },
-      "iterable": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "variable": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "function_definition",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "block",
-          "named": true
-        },
-        {
-          "type": "parameter_list",
-          "named": true
-        },
-        {
-          "type": "type_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "function_type",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "type_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "generic_type",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "type_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "if_statement",
-    "named": true,
-    "fields": {
-      "alternative": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "assignment",
-            "named": true
-          },
-          {
-            "type": "block",
-            "named": true
-          },
-          {
-            "type": "block_comment_statement",
-            "named": true
-          },
-          {
-            "type": "command",
-            "named": true
-          },
-          {
-            "type": "for_loop",
-            "named": true
-          },
-          {
-            "type": "function_definition",
-            "named": true
-          },
-          {
-            "type": "if_statement",
-            "named": true
-          },
-          {
-            "type": "while_loop",
-            "named": true
-          }
-        ]
-      },
-      "condition": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "consequence": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "assignment",
-            "named": true
-          },
-          {
-            "type": "block",
-            "named": true
-          },
-          {
-            "type": "block_comment_statement",
-            "named": true
-          },
-          {
-            "type": "command",
-            "named": true
-          },
-          {
-            "type": "for_loop",
-            "named": true
-          },
-          {
-            "type": "function_definition",
-            "named": true
-          },
-          {
-            "type": "if_statement",
-            "named": true
-          },
-          {
-            "type": "while_loop",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "object_literal",
+    "type": "main_block",
     "named": true,
     "fields": {},
     "children": {
@@ -900,84 +497,49 @@
       "required": false,
       "types": [
         {
-          "type": "object_pair",
+          "type": "activity_call",
+          "named": true
+        },
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "object_pair",
+    "type": "multiplicative_expression",
     "named": true,
-    "fields": {
-      "key": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "computed_property",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "exponential_expression",
+          "named": true
+        },
+        {
+          "type": "multiplicative_expression",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -989,51 +551,11 @@
       "required": true,
       "types": [
         {
-          "type": "array_literal",
-          "named": true
-        },
-        {
-          "type": "binary_operation",
-          "named": true
-        },
-        {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "conditional_expression",
+          "type": "expression",
           "named": true
         },
         {
           "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "object_literal",
-          "named": true
-        },
-        {
-          "type": "parenthesized_expression",
-          "named": true
-        },
-        {
-          "type": "postfix_operation",
-          "named": true
-        },
-        {
-          "type": "string",
-          "named": true
-        },
-        {
-          "type": "type_annotation",
-          "named": true
-        },
-        {
-          "type": "unary_operation",
           "named": true
         }
       ]
@@ -1045,7 +567,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "parameter",
@@ -1063,19 +585,61 @@
       "required": true,
       "types": [
         {
-          "type": "array_literal",
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "preconditions_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "activity_call",
           "named": true
         },
         {
-          "type": "binary_operation",
+          "type": "assignment",
           "named": true
         },
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "primary_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
         {
           "type": "boolean",
           "named": true
         },
         {
-          "type": "conditional_expression",
+          "type": "function_call",
           "named": true
         },
         {
@@ -1087,15 +651,11 @@
           "named": true
         },
         {
-          "type": "object_literal",
-          "named": true
-        },
-        {
           "type": "parenthesized_expression",
           "named": true
         },
         {
-          "type": "postfix_operation",
+          "type": "property_access",
           "named": true
         },
         {
@@ -1103,76 +663,86 @@
           "named": true
         },
         {
-          "type": "unary_operation",
+          "type": "value_with_unit",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "postfix_operation",
+    "type": "procedure",
     "named": true,
-    "fields": {
-      "operand": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "operator",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "confirmation_block",
+          "named": true
+        },
+        {
+          "type": "main_block",
+          "named": true
+        },
+        {
+          "type": "preconditions_block",
+          "named": true
+        },
+        {
+          "type": "procedure_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "procedure_name",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "property_access",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "relational_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "additive_expression",
+          "named": true
+        },
+        {
+          "type": "relational_expression",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1182,34 +752,10 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "assignment",
-          "named": true
-        },
-        {
-          "type": "block_comment_statement",
-          "named": true
-        },
-        {
-          "type": "command",
-          "named": true
-        },
-        {
-          "type": "for_loop",
-          "named": true
-        },
-        {
-          "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "if_statement",
-          "named": true
-        },
-        {
-          "type": "while_loop",
+          "type": "procedure",
           "named": true
         }
       ]
@@ -1221,7 +767,7 @@
     "fields": {}
   },
   {
-    "type": "type_annotation",
+    "type": "unary_expression",
     "named": true,
     "fields": {},
     "children": {
@@ -1229,111 +775,18 @@
       "required": true,
       "types": [
         {
-          "type": "type_expression",
+          "type": "primary_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "type_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "array_type",
-          "named": true
-        },
-        {
-          "type": "function_type",
-          "named": true
-        },
-        {
-          "type": "generic_type",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "union_type",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "unary_operation",
-    "named": true,
-    "fields": {
-      "argument": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      },
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "operator",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "union_type",
+    "type": "value_with_unit",
     "named": true,
     "fields": {},
     "children": {
@@ -1341,7 +794,26 @@
       "required": true,
       "types": [
         {
-          "type": "type_expression",
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "unit",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "wait_until_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -1350,96 +822,53 @@
   {
     "type": "while_loop",
     "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "assignment",
-            "named": true
-          },
-          {
-            "type": "block",
-            "named": true
-          },
-          {
-            "type": "block_comment_statement",
-            "named": true
-          },
-          {
-            "type": "command",
-            "named": true
-          },
-          {
-            "type": "for_loop",
-            "named": true
-          },
-          {
-            "type": "function_definition",
-            "named": true
-          },
-          {
-            "type": "if_statement",
-            "named": true
-          },
-          {
-            "type": "while_loop",
-            "named": true
-          }
-        ]
-      },
-      "condition": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "array_literal",
-            "named": true
-          },
-          {
-            "type": "binary_operation",
-            "named": true
-          },
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "conditional_expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "object_literal",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          },
-          {
-            "type": "postfix_operation",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unary_operation",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "activity_call",
+          "named": true
+        },
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "conditional",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "expression_statement",
+          "named": true
+        },
+        {
+          "type": "loop",
+          "named": true
+        },
+        {
+          "type": "wait_until_statement",
+          "named": true
+        }
+      ]
     }
+  },
+  {
+    "type": "!=",
+    "named": false
+  },
+  {
+    "type": "\"",
+    "named": false
+  },
+  {
+    "type": "'",
+    "named": false
   },
   {
     "type": "(",
@@ -1450,15 +879,35 @@
     "named": false
   },
   {
+    "type": "*",
+    "named": false
+  },
+  {
+    "type": "**",
+    "named": false
+  },
+  {
+    "type": "+",
+    "named": false
+  },
+  {
     "type": ",",
     "named": false
   },
   {
-    "type": "->",
+    "type": "-",
     "named": false
   },
   {
-    "type": ":",
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": "/",
+    "named": false
+  },
+  {
+    "type": ";",
     "named": false
   },
   {
@@ -1466,11 +915,19 @@
     "named": false
   },
   {
+    "type": "<=",
+    "named": false
+  },
+  {
+    "type": "<>",
+    "named": false
+  },
+  {
     "type": "=",
     "named": false
   },
   {
-    "type": "=>",
+    "type": "==",
     "named": false
   },
   {
@@ -1478,24 +935,16 @@
     "named": false
   },
   {
-    "type": "?",
+    "type": ">=",
     "named": false
   },
   {
-    "type": "[",
+    "type": "\\",
     "named": false
   },
   {
-    "type": "]",
+    "type": "and",
     "named": false
-  },
-  {
-    "type": "block_comment",
-    "named": true
-  },
-  {
-    "type": "boolean",
-    "named": true
   },
   {
     "type": "comment",
@@ -1503,15 +952,35 @@
     "extra": true
   },
   {
+    "type": "confirm",
+    "named": false
+  },
+  {
+    "type": "confirmation",
+    "named": false
+  },
+  {
+    "type": "do",
+    "named": false
+  },
+  {
     "type": "else",
     "named": false
   },
   {
-    "type": "for",
+    "type": "elsif",
     "named": false
   },
   {
-    "type": "function",
+    "type": "end",
+    "named": false
+  },
+  {
+    "type": "false",
+    "named": false
+  },
+  {
+    "type": "for",
     "named": false
   },
   {
@@ -1527,32 +996,59 @@
     "named": false
   },
   {
-    "type": "line_continuation",
-    "named": true,
-    "extra": true
+    "type": "initiate",
+    "named": false
+  },
+  {
+    "type": "main",
+    "named": false
+  },
+  {
+    "type": "mod",
+    "named": false
+  },
+  {
+    "type": "not",
+    "named": false
   },
   {
     "type": "number",
     "named": true
   },
   {
-    "type": "operator",
+    "type": "or",
+    "named": false
+  },
+  {
+    "type": "preconditions",
+    "named": false
+  },
+  {
+    "type": "procedure",
+    "named": false
+  },
+  {
+    "type": "then",
+    "named": false
+  },
+  {
+    "type": "true",
+    "named": false
+  },
+  {
+    "type": "unit",
     "named": true
   },
   {
+    "type": "until",
+    "named": false
+  },
+  {
+    "type": "wait",
+    "named": false
+  },
+  {
     "type": "while",
-    "named": false
-  },
-  {
-    "type": "{",
-    "named": false
-  },
-  {
-    "type": "|",
-    "named": false
-  },
-  {
-    "type": "}",
     "named": false
   }
 ]

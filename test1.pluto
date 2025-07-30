@@ -1,3 +1,0 @@
-x = 42
-print "hello"
-run x y z

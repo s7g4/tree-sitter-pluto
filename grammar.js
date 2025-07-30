@@ -1,441 +1,411 @@
-function sepByNewline($, rule) {
-  return seq(
-    rule, 
-    repeat(seq($._statement_separator, rule)), 
-    optional($._statement_separator)
-  );
-}
-
-// Helper function to create binary operation rules
-const PRECEDENCE = {
-  command: 1,
-  argument: 2,
-  expression: 3,
-  assignment: 5,
-  conditional: 7,        // Lowered: ternary should have lower precedence than comparisons
-  logical_or: 8,
-  logical_and: 9,
-  equality: 10,
-  comparison: 11,        // Lowered to be higher than conditional
-  bitwise_or: 12,
-  bitwise_xor: 13,
-  bitwise_and: 14,
-  shift: 15,
-  add: 16,
-  mult: 17,
-  power: 18,
-  unary: 19,
-  postfix: 20,
-  primary: 21,
-};
-
-function createBinaryOp($, operators, precedence) {
-  return operators.map(operator =>
-    prec.left(PRECEDENCE[precedence], seq(
-      field('left', $._expression),
-      field('operator', alias(token(operator), $.operator)),
-      field('right', $._expression)
-    ))
-  );
-}
-
 module.exports = grammar({
   name: 'pluto',
 
-  word: $ => $.identifier,
+  extras: $ => [
+    /\s+/,
+    $.comment
+  ],
 
   conflicts: $ => [
-    [$.binary_operation, $.postfix_operation],
-    [$.binary_operation, $.unary_operation, $.postfix_operation],
-    [$.argument_list,$._expression],
-    [$.conditional_expression,$.unary_operation, $.postfix_operation],
-    [$.conditional_expression,$.binary_operation, $.postfix_operation],
-    [$._statement, $.if_statement],
-    [$.empty_line],
-    [$.assignment, $.argument_list],
-    [$._expression],
+    [$.initiate_only],
+    [$.initiate_and_confirm],
+    [$.activity_reference, $.primary_expression],
   ],
 
-
-  extras: $ => [
-    token(prec(-1, /[ \t\r\n]/)),  // Handle horizontal whitespace, but not newlines
-    $.comment,
-    $.line_continuation,
-  ],
+  word: $ => $.identifier,
 
   rules: {
-    source_file: $ => sepByNewline($, $._statement),
+    source_file: $ => repeat($.procedure),
 
-    // Empty line handling
-    empty_line: $ => seq(
-      token('\n'),
-      repeat(token('\n'))
+    // Main procedure structure
+    procedure: $ => seq(
+      'procedure',
+      $.procedure_name,
+      optional($.preconditions_block),
+      $.main_block,
+      optional($.confirmation_block),
+      'end',
+      'procedure'
     ),
 
-    _statement_separator: $ => token(/\n+/),
+    procedure_name: $ => $.identifier,
 
-    block_comment_statement: $ => $.block_comment,
+    // Block structures
+    preconditions_block: $ => seq(
+      'preconditions',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
+      )),
+      'end',
+      'preconditions'
+    ),
 
-    _statement: $ => choice(
+    main_block: $ => seq(
+      'main',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
+      )),
+      'end',
+      'main'
+    ),
+
+    confirmation_block: $ => seq(
+      'confirmation',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
+      )),
+      'end',
+      'confirmation'
+    ),
+
+    // Statements (for use in conditionals and loops)
+    statement: $ => choice(
+      $.activity_call,
+      $.wait_until_statement,
       $.assignment,
-      $.block_comment_statement,
-      prec.right(PRECEDENCE.command, $.command),
-      $.if_statement,
-      $.while_loop,
-      $.for_loop,
-      $.function_definition
+      $.conditional,
+      $.loop,
+      $.expression_statement
     ),
 
-    // Reserved keywords that cannot be used as arguments
-    reserved_keyword: $ => choice(
-      'if', 'else', 'while', 'for', 'function', 'return', 'break', 'continue',
-      'try', 'catch', 'finally', 'throw', 'import', 'export', 'from',
-      'class', 'extends', 'super', 'static', 'public', 'private', 'protected',
-      'const', 'let', 'var', 'new', 'delete', 'typeof', 'instanceof',
-      'in', 'of', 'with', 'switch', 'case', 'default', 'do', 'async', 'await',
-      'yield', 'enum', 'interface', 'type', 'namespace', 'module', 'declare',
-      'abstract', 'implements', 'readonly', 'keyof', 'unique', 'infer',
-      'never', 'unknown', 'object', 'string', 'number', 'boolean', 'symbol',
-      'bigint', 'void', 'any', 'null', 'undefined', 'true', 'false',
-      'this', 'arguments', 'eval', 'NaN', 'Infinity', 'globalThis',
-      'package', 'protected', 'goto', 'volatile', 'transient', 'synchronized',
-      'native', 'strictfp', 'final', 'abstract', 'assert', 'byte', 'char',
-      'double', 'float', 'int', 'long', 'short', 'match', 'case', 'where',
-      'when', 'unless', 'until', 'loop', 'repeat', 'select', 'defer',
-      'go', 'chan', 'range', 'fallthrough', 'struct', 'map', 'slice',
-      'interface', 'type', 'func', 'var', 'const', 'package', 'import',
-      'and', 'or', 'not', 'is', 'as', 'pass', 'lambda', 'global', 'nonlocal',
-      'with', 'raise', 'except', 'finally', 'def', 'class', 'yield', 'from',
-      'async', 'await', 'match', 'case', 'None', 'True', 'False'
+    // Wait until statement
+    wait_until_statement: $ => seq(
+      'wait',
+      'until',
+      $.expression,
+      optional(';')
     ),
 
-    // Assignment with single or multiple targets
-    assignment: $ => prec.right(PRECEDENCE.assignment, seq(
-      field("left", seq(
-        $.identifier,
-        repeat(seq($.identifier))
-      )),
-      optional(field("type", $.type_annotation)),
-      token('='),
-      field("right", $._expression)
-    )),
-
-    // Command with optional arguments
-    command: $ => prec.left(PRECEDENCE.command, seq(
-      field("name", $.identifier),
-      optional(field("arguments", $.argument_list))
-    )),
-
-    // Argument list handles space-separated arguments but stops at reserved keywords
-    argument_list: $ => prec(PRECEDENCE.argument, repeat1(
-      choice(
-        $.parenthesized_expression,
-        $.binary_operation,
-        $.string,
-        $.number,
-        $.boolean,
-        // Only allow identifiers that are NOT reserved keywords
-        prec.dynamic(-1, $.identifier)
-      ))
+    // Activity calls
+    activity_call: $ => choice(
+      $.initiate_and_confirm,
+      $.initiate_only,
+      $.confirm_only
     ),
 
-    // Conditional (ternary) operator
-    conditional_expression: $ => prec.right(PRECEDENCE.conditional, seq(
-      field('condition', $._expression),
-      token('?'),
-      field('consequence', $._expression),
-      token(':'),
-      field('alternative', $._expression)
-    )),
-
-    // Comprehensive binary operations
-    binary_operation: $ => choice(
-      // Logical operators
-      ...createBinaryOp($, ['||'], 'logical_or'),
-      ...createBinaryOp($, ['&&'], 'logical_and'),
-      
-      // Equality operators
-      ...createBinaryOp($, ['==', '!=', '===', '!=='], 'equality'),
-      
-      // Comparison operators
-      ...createBinaryOp($, ['<', '>', '<=', '>='], 'comparison'),
-      
-      // Bitwise operators
-      ...createBinaryOp($, ['|'], 'bitwise_or'),
-      ...createBinaryOp($, ['^'], 'bitwise_xor'),
-      ...createBinaryOp($, ['&'], 'bitwise_and'),
-      
-      // Shift operators
-      ...createBinaryOp($, ['<<', '>>', '>>>'], 'shift'),
-      
-      // Arithmetic operators
-      ...createBinaryOp($, ['+', '-'], 'add'),
-      ...createBinaryOp($, ['*', '/', '%'], 'mult'),
-      ...createBinaryOp($, ['**'], 'power'),
-      
-      // String operations
-      ...createBinaryOp($, ['++'], 'add'),
-      ...createBinaryOp($, ['in'], 'comparison'),
-      ...createBinaryOp($, ['matches'], 'comparison'),
-    ),
-
-    // Expression hierarchy
-    _expression: $ => choice(
-      $.conditional_expression,
-      $.binary_operation,
-      $.unary_operation,
-      $.postfix_operation,
-      $.parenthesized_expression,
-      $.array_literal,
-      $.object_literal,
-      $.string,
-      $.number,
-      $.boolean,
-      $.identifier,
-    ),
-
-    // Unary operations
-    unary_operation: $ => prec.right(PRECEDENCE.unary, seq(
-      field('operator', alias(choice(
-        token('-'),
-        token('+'),
-        token('!'),
-        token('~'),
-        token('++'),
-        token('--'),
-        token('typeof'),
-        token('not')
-      ), $.operator)),
-      field('argument', $._expression)
-    )),
-
-    // Postfix operations
-    postfix_operation: $ => prec.left(PRECEDENCE.postfix, seq(
-      field('operand', $._expression),
-      field('operator', alias(choice(
-        token('++'),
-        token('--'),
-        token('?'),
-        token('!')
-      ), $.operator))
-    )),
-
-    // Parenthesized expressions
-    parenthesized_expression: $ => seq(
-      token('('),
-      $._expression,
-      token(')')
-    ),
-
-    // Array literals
-    array_literal: $ => seq(
-      token('['),
-      optional(seq(
-        $._expression,
-        repeat(seq(token(','), $._expression)),
-        optional(token(','))
-      )),
-      token(']')
-    ),
-
-    // Object literals
-    object_literal: $ => prec(2, seq(
-      token('{'),
-      optional(seq(
-        $.object_pair,
-        repeat(seq(token(','), $.object_pair)),
-        optional(token(','))
-      )),
-      token('}')
-    )),
-
-    object_pair: $ => seq(
-      field('key', choice($.identifier, $.string, $.computed_property)),
-      token(':'),
-      field('value', $._expression)
-    ),
-
-    computed_property: $ => seq(
-      token('['),
-      $._expression,
-      token(']')
-    ),
-
-    // Type annotations
-    type_annotation: $ => seq(
-      token(':'),
-      $.type_expression
-    ),
-
-    type_expression: $ => choice(
-      $.identifier,
-      $.generic_type,
-      $.union_type,
-      $.array_type,
-      $.function_type
-    ),
-
-    generic_type: $ => seq(
-      $.identifier,
-      token('<'),
-      $.type_expression,
-      repeat(seq(token(','), $.type_expression)),
-      token('>')
-    ),
-
-    union_type: $ => prec.left(1, seq(
-      $.type_expression,
-      repeat1(seq(token('|'), $.type_expression))
-    )),
-
-    array_type: $ => prec(2, seq(
-      $.type_expression,
-      token('['),
-      token(']')
-    )),
-
-    function_type: $ => prec.right(seq(
-      token('('),
-      optional(seq(
-        $.type_expression,
-        repeat(seq(token(','), $.type_expression))
-      )),
-      token(')'),
-      token('=>'),
-      $.type_expression
-    )),
-
-
-
-    // Terminal patterns - identifier now excludes reserved keywords
-    identifier: $ => token(prec(-1, /[a-zA-Z_\u00a1-\uffff][a-zA-Z0-9_\u00a1-\uffff]*/)),
-
-    // Number support
-    number: $ => token(choice(
-      // Scientific notation
-      /\d+[eE][+-]?\d+/,
-      /\d*\.\d+[eE][+-]?\d+/,
-      // Hexadecimal
-      /0[xX][0-9a-fA-F]+/,
-      // Binary
-      /0[bB][01]+/,
-      // Octal
-      /0[oO][0-7]+/,
-      // BigInt
-      /\d+n/,
-      // Decimals
-      /\d*\.\d+/,
-      // Integers
-      /\d+/
-    )),
-
-    // String support
-    string: $ => choice(
-      // Double quoted strings
-      token(seq(
-        '"',
-        repeat(choice(
-          /[^"\\$]+/,
-          /\\./
-        )),
-        '"'
-      )),
-      // Single quoted strings
-      token(seq(
-        "'",
-        repeat(choice(
-          /[^'\\]+/,
-          /\\./
-        )),
-        "'"
-      ))
-    ),
-
-    string_content: $ => token.immediate(/[^"\\$]+/),
-
-    escape_sequence: $ => token.immediate(seq(
-      '\\',
-      choice(
-        /[\\'"nrtbfav0]/,
-        /x[0-9a-fA-F]{2}/,
-        /u[0-9a-fA-F]{4}/,
-        /U[0-9a-fA-F]{8}/,
-        /[0-7]{1,3}/,
-        /./
-      )
-    )),
-
-    // Boolean and null values
-    boolean: $ => token(choice('true', 'false')),
-    null: $ => token('null'),
-    undefined: $ => token('undefined'),
-    this: $ => token('this'),
-    super: $ => token('super'),
-
-    // Comments
-    comment: $ => token(seq('#', /.*/)),
-    
-    block_comment: $ => token(seq(
-      '/*',
-      /[^*]*\*+([^/*][^*]*\*+)*/,
-      '/'
-    )),
-
-    line_continuation: $ => token(seq('\\', choice('\n', '\r\n'))),
-
-    // Function definitions
-    function_definition: $ => seq(
-      token('function'),
-      field('name', $.identifier),
-      token('('),
+    initiate_and_confirm: $ => seq(
+      'initiate',
+      'and',
+      'confirm',
+      $.activity_reference,
       optional($.parameter_list),
-      token(')'),
-      optional(seq(token('->'), $.type_expression)),
-      $.block
+      optional(';')
+    ),
+
+    initiate_only: $ => seq(
+      'initiate',
+      $.activity_reference,
+      optional($.parameter_list),
+      optional(';')
+    ),
+
+    confirm_only: $ => seq(
+      'confirm',
+      choice(
+        prec(2, seq($.activity_reference, optional($.parameter_list))),
+        prec(1, $.expression)
+      ),
+      optional(';')
+    ),
+
+    activity_reference: $ => choice(
+      $.identifier,
+      $.property_access
     ),
 
     parameter_list: $ => seq(
-      $.parameter,
-      repeat(seq(token(','), $.parameter))
-    ),
-
-    parameter: $ => seq(
-      $.identifier,
-      optional($.type_annotation),
-      optional(seq(token('='), $._expression))
-    ),
-
-    block: $ => prec(1, seq(
-      token('{'),
-      repeat($._statement),
-      token('}')
-    )),
-
-    // Control flow structures
-    if_statement: $ => prec.right(seq(
-      token('if'),
-      field('condition', $._expression),
-      field('consequence', choice($.block, $._statement)),
+      '(',
       optional(seq(
-        token('else'),
-        field('alternative', choice($.block, $._statement, $.if_statement))
+        $.parameter,
+        repeat(seq(',', $.parameter))
+      )),
+      ')'
+    ),
+
+    parameter: $ => choice(
+      $.expression,
+      seq($.identifier, '=', $.expression)
+    ),
+
+    // Assignment
+    assignment: $ => seq(
+      $.identifier,
+      '=',
+      $.expression,
+      optional(';')
+    ),
+
+    // Conditional statements
+    conditional: $ => seq(
+      'if',
+      $.expression,
+      'then',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
+      )),
+      repeat($.elsif_clause),
+      optional($.else_clause),
+      'end',
+      'if'
+    ),
+
+    elsif_clause: $ => seq(
+      'elsif',
+      $.expression,
+      'then',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
       ))
-    )),
+    ),
+
+    else_clause: $ => seq(
+      'else',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
+      ))
+    ),
+
+    // Loop statements
+    loop: $ => choice(
+      $.while_loop,
+      $.for_loop
+    ),
 
     while_loop: $ => seq(
-      token('while'),
-      field('condition', $._expression),
-      field('body', choice($.block, $._statement))
+      'while',
+      $.expression,
+      'do',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
+      )),
+      'end',
+      'while'
     ),
 
     for_loop: $ => seq(
-      token('for'),
-      field('variable', $.identifier),
-      token('in'),
-      field('iterable', $._expression),
-      field('body', choice($.block, $._statement))
+      'for',
+      $.identifier,
+      'in',
+      $.expression,
+      'do',
+      repeat(choice(
+        $.activity_call,
+        $.wait_until_statement,
+        $.assignment,
+        $.conditional,
+        $.loop,
+        $.expression_statement
+      )),
+      'end',
+      'for'
     ),
 
+    // Expression statement - lowest precedence
+    expression_statement: $ => prec(-1, seq(
+      $.expression,
+      optional(';')
+    )),
 
+    // Simplified expression hierarchy
+    expression: $ => $.logical_or_expression,
+
+    logical_or_expression: $ => prec.left(1, choice(
+      $.logical_and_expression,
+      seq($.logical_or_expression, 'or', $.logical_and_expression)
+    )),
+
+    logical_and_expression: $ => prec.left(2, choice(
+      $.equality_expression,
+      seq($.logical_and_expression, 'and', $.equality_expression)
+    )),
+
+    equality_expression: $ => prec.left(3, choice(
+      $.relational_expression,
+      seq($.equality_expression, choice('==', '!=', '<>'), $.relational_expression)
+    )),
+
+    relational_expression: $ => prec.left(4, choice(
+      $.additive_expression,
+      seq($.relational_expression, choice('<', '>', '<=', '>='), $.additive_expression)
+    )),
+
+    additive_expression: $ => prec.left(5, choice(
+      $.multiplicative_expression,
+      seq($.additive_expression, choice('+', '-'), $.multiplicative_expression)
+    )),
+
+    multiplicative_expression: $ => prec.left(6, choice(
+      $.exponential_expression,
+      seq($.multiplicative_expression, choice('*', '/', 'mod'), $.exponential_expression)
+    )),
+
+    exponential_expression: $ => prec.right(7, choice(
+      $.unary_expression,
+      seq($.unary_expression, '**', $.exponential_expression)
+    )),
+
+    unary_expression: $ => choice(
+      $.primary_expression,
+      prec(8, seq('not', $.unary_expression)),
+      prec(8, seq('-', $.unary_expression)),
+      prec(8, seq('+', $.unary_expression))
+    ),
+
+    primary_expression: $ => choice(
+      $.identifier,
+      $.number,
+      $.string,
+      $.boolean,
+      $.property_access,
+      $.function_call,
+      $.parenthesized_expression,
+      $.value_with_unit
+    ),
+
+    // Property access (e.g., System.Temperature.Current)
+    property_access: $ => prec.left(9, seq(
+      $.identifier,
+      repeat1(seq('.', $.identifier))
+    )),
+
+    // Function calls
+    function_call: $ => prec.left(9, seq(
+      $.identifier,
+      '(',
+      optional(seq(
+        $.parameter,
+        repeat(seq(',', $.parameter))
+      )),
+      ')'
+    )),
+
+    parenthesized_expression: $ => seq(
+      '(',
+      $.expression,
+      ')'
+    ),
+
+    // Value with unit (e.g., "60 degC", "10 deg/h")
+    value_with_unit: $ => seq(
+      $.number,
+      $.unit
+    ),
+
+    // Literals
+    number: $ => token(seq(
+      /\d+/,
+      optional(seq('.', /\d+/)),
+      optional(seq(/[eE]/, optional(/[+-]/), /\d+/))
+    )),
+
+    string: $ => choice(
+      seq('"', repeat(choice(/[^"\\]/, seq('\\', /./))) , '"'),
+      seq("'", repeat(choice(/[^'\\]/, seq('\\', /./))) , "'")
+    ),
+
+    boolean: $ => choice('true', 'false'),
+
+    // Units for measurements (comprehensive space operations units)
+    unit: $ => token(choice(
+      // Temperature
+      'degC', 'degF', 'K',
+      
+      // Angular
+      'deg', 'rad', 'deg/h', 'deg/s', 'deg/min', 'rad/s', 'rad/min',
+      'mrad', 'urad', 'arcsec', 'arcmin',
+      
+      // Distance/Length
+      'm', 'km', 'mm', 'cm', 'um', 'nm', 'ft', 'in', 'mil',
+      
+      // Time
+      's', 'min', 'h', 'ms', 'us', 'ns', 'day', 'hr',
+      
+      // Electrical
+      'V', 'mV', 'kV', 'A', 'mA', 'uA', 'W', 'mW', 'kW', 'MW',
+      'Ohm', 'kOhm', 'MOhm', 'F', 'uF', 'nF', 'pF', 'H', 'mH', 'uH',
+      
+      // Frequency
+      'Hz', 'kHz', 'MHz', 'GHz', 'rpm', 'cps',
+      
+      // Pressure
+      'Pa', 'kPa', 'MPa', 'bar', 'mbar', 'psi', 'atm', 'Torr', 'mmHg',
+      
+      // Mass/Weight
+      'kg', 'g', 'mg', 'ug', 'lb', 'oz', 'ton', 'tonne',
+      
+      // Force
+      'N', 'mN', 'kN', 'MN', 'lbf', 'kgf', 'dyne',
+      
+      // Energy/Work
+      'J', 'kJ', 'MJ', 'Wh', 'kWh', 'MWh', 'cal', 'kcal', 'BTU', 'eV',
+      
+      // Power density
+      'W/m2', 'mW/cm2', 'W/kg',
+      
+      // Velocity/Speed
+      'm/s', 'km/h', 'km/s', 'ft/s', 'mph', 'knot',
+      
+      // Acceleration
+      'm/s2', 'g', 'ft/s2',
+      
+      // Magnetic
+      'T', 'mT', 'uT', 'nT', 'Gauss', 'Wb', 'Wb/m2',
+      
+      // Flow
+      'l/s', 'l/min', 'l/h', 'm3/s', 'm3/min', 'm3/h', 'gal/min', 'cfm',
+      
+      // Percentage and dimensionless
+      '%', 'ppm', 'ppb', 'percent', 'dB', 'dBm', 'dBW',
+      
+      // Data/Information
+      'bit', 'byte', 'kB', 'MB', 'GB', 'TB', 'bps', 'kbps', 'Mbps', 'Gbps',
+      
+      // Concentration
+      'mol/m3', 'mol/l', 'mg/l', 'ug/m3', 'ppm', 'ppb',
+      
+      // Radiation
+      'Gy', 'Sv', 'rad', 'rem', 'Ci', 'Bq', 'R'
+    )),
+
+    // Identifiers
+    identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
+
+    // Comments
+    comment: $ => token(seq('#', /.*/)),
   }
 });

@@ -1,295 +1,445 @@
-==================
-Basic Assignment
-==================
+================================================================================
+Basic Procedure Structure
+================================================================================
 
-x = 42
+procedure SimpleProcedure
+main
+  initiate and confirm StartSystem;
+end main
+end procedure
 
----
-
-(source_file
-  (assignment
-    left: (identifier)
-    right: (number)))
-
-==================
-Multiple Assignment
-==================
-
-x y = "hello"
-
----
+--------------------------------------------------------------------------------
 
 (source_file
-  (assignment
-    left: (identifier)
-    left: (identifier)
-    right: (string)))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (activity_call
+        (initiate_and_confirm
+          (activity_reference (identifier)))))))
 
-==================
-Basic Command
-==================
+================================================================================
+Complete Procedure with All Sections
+================================================================================
 
-print "hello"
+procedure ComplexProcedure
+preconditions
+  wait until SystemTemp > 25 degC;
+  wait until PowerLevel >= 80 %;
+end preconditions
 
----
+main
+  initiate and confirm PowerOn();
+  wait until Status == "Ready";
+  initiate GyroCalibration(duration=30 s);
+  confirm GyroReady;
+end main
+
+confirmation
+  confirm SystemOperational;
+  confirm GyroTemp < 60 degC;
+end confirmation
+end procedure
+
+--------------------------------------------------------------------------------
+
 (source_file
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (string))))
+  (procedure
+    (procedure_name (identifier))
+    (preconditions_block
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit)))))
+    (main_block
+      (activity_call
+        (initiate_and_confirm
+          (activity_reference (identifier))
+          (parameter_list)))
+      (wait_until_statement
+        (equality_expression
+          (identifier)
+          (string)))
+      (activity_call
+        (initiate_only
+          (activity_reference (identifier))
+          (parameter_list
+            (parameter (identifier) (value_with_unit (number) (unit))))))
+      (activity_call
+        (confirm_only
+          (activity_reference (identifier)))))
+    (confirmation_block
+      (activity_call
+        (confirm_only
+          (activity_reference (identifier))))
+      (activity_call
+        (confirm_only
+          (activity_reference (identifier)))))))
 
-==================
-Multiple Arguments
-==================
+================================================================================
+Conditional Statements
+================================================================================
 
-run x y z
+procedure ConditionalTest
+main
+  if Temperature > 50 degC then
+    initiate and confirm CoolingSystem;
+  elsif Temperature < 10 degC then
+    initiate and confirm HeatingSystem;
+  else
+    initiate and confirm NormalOperation;
+  end if
+end main
+end procedure
 
----
+--------------------------------------------------------------------------------
+
 (source_file
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (identifier)
-      (identifier)
-      (identifier))))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (conditional
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit)))
+        (activity_call
+          (initiate_and_confirm
+            (activity_reference (identifier))))
+        (elsif_clause
+          (relational_expression
+            (identifier)
+            (value_with_unit (number) (unit)))
+          (activity_call
+            (initiate_and_confirm
+              (activity_reference (identifier)))))
+        (else_clause
+          (activity_call
+            (initiate_and_confirm
+              (activity_reference (identifier)))))))))
 
-==================
-Expression Command
-==================
+================================================================================
+Loop Statements
+================================================================================
 
-add (5 + 3) * 2
+procedure LoopTest
+main
+  while SystemStatus != "Complete" do
+    wait until SensorReading > threshold;
+    initiate DataCollection;
+  end while
+  
+  for sensor in SensorList do
+    initiate and confirm CalibrateSensor(sensor);
+  end for
+end main
+end procedure
 
----
+--------------------------------------------------------------------------------
+
 (source_file
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (binary_operation
-        left: (parenthesized_expression
-          (binary_operation
-            left: (number)
-            operator: (operator)
-            right: (number)))
-        operator: (operator)
-        right: (number)))))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (loop
+        (while_loop
+          (equality_expression
+            (identifier)
+            (string))
+          (wait_until_statement
+            (relational_expression
+              (identifier)
+              (identifier)))
+          (activity_call
+            (initiate_only
+              (activity_reference (identifier))))))
+      (loop
+        (for_loop
+          (identifier)
+          (identifier)
+          (activity_call
+            (initiate_and_confirm
+              (activity_reference (identifier))
+              (parameter_list
+                (parameter (identifier))))))))))
 
-==================
-Command Test
-==================
-
-print "hello"
-
-run x y z
-
----
-(source_file
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (string)))
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (identifier)
-      (identifier)
-      (identifier))))
-
-
-==================
-Boolean Support
-==================
-
-flag = true
-enabled = false
-
----
-(source_file
-  (assignment
-    left: (identifier)
-    right: (boolean))
-  (assignment
-    left: (identifier)
-    right: (boolean)))
-
-==================
-No Arguments Command
-==================
-
-exit
-
----
-(source_file
-  (command
-    name: (identifier)))
-
-==================
+================================================================================
 Complex Expressions
-==================
+================================================================================
 
-result = (x + y) * (z - w)
+procedure ExpressionTest
+main
+  wait until (Pressure > 1000 Pa) and (Temperature < 100 degC);
+  wait until not (ErrorFlag or WarningFlag);
+  TotalTime = StartTime + Duration;
+  Ratio = (Value1 / Value2) * 100 %;
+end main
+end procedure
 
----
+--------------------------------------------------------------------------------
+
 (source_file
-  (assignment
-    left: (identifier)
-    right: (binary_operation
-      left: (parenthesized_expression
-        (binary_operation
-          left: (identifier)
-          operator: (operator)
-          right: (identifier)))
-      operator: (operator)
-      right: (parenthesized_expression
-        (binary_operation
-          left: (identifier)
-          operator: (operator)
-          right: (identifier))))))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (wait_until_statement
+        (logical_and_expression
+          (parenthesized_expression
+            (relational_expression
+              (identifier)
+              (value_with_unit (number) (unit))))
+          (parenthesized_expression
+            (relational_expression
+              (identifier)
+              (value_with_unit (number) (unit))))))
+      (wait_until_statement
+        (unary_expression
+          (parenthesized_expression
+            (logical_or_expression
+              (identifier)
+              (identifier)))))
+      (assignment
+        (identifier)
+        (additive_expression
+          (identifier)
+          (identifier)))
+      (assignment
+        (identifier)
+        (multiplicative_expression
+          (parenthesized_expression
+            (multiplicative_expression
+              (identifier)
+              (identifier)))
+          (value_with_unit (number) (unit)))))))
 
-==================
-Unary Operations
-==================
+================================================================================
+Property Access and Function Calls
+================================================================================
 
-neg = -x
-pos = +42
+procedure PropertyTest
+main
+  wait until System.Temperature.Current > 75 degC;
+  initiate and confirm SetParameter("mode", "automatic");
+  Value = CalculateAverage(Data.Temperature, Data.Pressure);
+  confirm System.Status.Operational;
+end main
+end procedure
 
----
+--------------------------------------------------------------------------------
+
 (source_file
-  (assignment
-    left: (identifier)
-    right: (unary_operation
-      operator: (operator)
-      argument: (identifier)))
-  (assignment
-    left: (identifier)
-    right: (unary_operation
-      operator: (operator)
-      argument: (number))))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (wait_until_statement
+        (relational_expression
+          (property_access
+            (identifier)
+            (identifier)
+            (identifier))
+          (value_with_unit (number) (unit))))
+      (activity_call
+        (initiate_and_confirm
+          (activity_reference (identifier))
+          (parameter_list
+            (parameter (string))
+            (parameter (string)))))
+      (assignment
+        (identifier)
+        (function_call
+          (identifier)
+          (property_access (identifier) (identifier))
+          (property_access (identifier) (identifier))))
+      (activity_call
+        (confirm_only
+          (activity_reference
+            (property_access (identifier) (identifier) (identifier))))))))
 
-==================
-Mixed Command Arguments
-==================
+================================================================================
+Comments and Mixed Content
+================================================================================
 
-process "file.txt" 42 true
+procedure CommentedProcedure
+# This is a test procedure with comments
+preconditions
+  # Check initial conditions
+  wait until PowerSupply == "ON"; # Power must be on
+end preconditions
 
----
+main
+  # Main execution block
+  initiate and confirm StartSequence(); # Begin startup
+  wait until SystemReady; # Wait for ready state
+end main
+end procedure
+
+--------------------------------------------------------------------------------
+
 (source_file
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (string)
-      (number)
-      (boolean))))
+  (procedure
+    (procedure_name (identifier))
+    (comment)
+    (preconditions_block
+      (comment)
+      (wait_until_statement
+        (equality_expression
+          (identifier)
+          (string)))
+      (comment))
+    (main_block
+      (comment)
+      (activity_call
+        (initiate_and_confirm
+          (activity_reference (identifier))
+          (parameter_list)))
+      (comment)
+      (wait_until_statement (identifier))
+      (comment))))
 
-==================
-Nested Parentheses
-==================
+================================================================================
+Units and Measurements
+================================================================================
 
-calc ((x + y) * (z + w))
+procedure UnitsTest
+main
+  wait until Voltage > 12 V;
+  wait until Current < 5 A;
+  wait until Frequency == 50 Hz;
+  wait until Angle > 90 deg;
+  wait until AngularVelocity < 10 deg/s;
+  wait until Time > 30 min;
+  wait until Distance < 100 m;
+  wait until Mass == 2.5 kg;
+  wait until Force > 100 N;
+  wait until Pressure < 1.5 bar;
+end main
+end procedure
 
----
+--------------------------------------------------------------------------------
+
 (source_file
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (parenthesized_expression
-        (binary_operation
-          left: (parenthesized_expression
-            (binary_operation
-              left: (identifier)
-              operator: (operator)
-              right: (identifier)))
-          operator: (operator)
-          right: (parenthesized_expression
-            (binary_operation
-              left: (identifier)
-              operator: (operator)
-              right: (identifier))))))))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (equality_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (equality_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit))))
+      (wait_until_statement
+        (relational_expression
+          (identifier)
+          (value_with_unit (number) (unit)))))))
 
-==================
-Scientific Notation
-==================
+================================================================================
+Error Cases
+================================================================================
 
-large = 1.5e10
-small = 2.3e-5
+procedure IncompleteProc
+main
+  wait until # Missing expression
 
----
+--------------------------------------------------------------------------------
+
 (source_file
-  (assignment
-    left: (identifier)
-    right: (number))
-  (assignment
-    left: (identifier)
-    right: (number)))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (ERROR (identifier))
+      (comment))))
 
-==================
-Single Quote Strings
-==================
+================================================================================
+Boolean and Mathematical Expressions
+================================================================================
 
-msg = 'Hello World'
+procedure MathTest
+main
+  Result = (A + B) * C / D;
+  Power = Base ** Exponent;
+  Remainder = Value mod 10;
+  Flag = true and not false;
+  Complex = (X > 0) or (Y < 100) and (Z != 50);
+end main
+end procedure
 
----
+--------------------------------------------------------------------------------
+
 (source_file
-  (assignment
-    left: (identifier)
-    right: (string)))
-
-==================
-Comments
-==================
-
-# This is a comment
-x = 42  # Inline comment
-
----
-(source_file
-  (comment)
-  (assignment
-    left: (identifier)
-    right: (number))
-  (comment))
-
-==================
-Comparison Operations
-==================
-
-check x > y
-validate a == b
-
----
-(source_file
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (binary_operation
-        left: (identifier)
-        operator: (operator)
-        right: (identifier))))
-  (command
-    name: (identifier)
-    arguments: (argument_list
-      (binary_operation
-        left: (identifier)
-        operator: (operator)
-        right: (identifier)))))
-
-==================
-Logical Operations
-==================
-
-result = flag && enabled
-check = x || y
-
----
-(source_file
-  (assignment
-    left: (identifier)
-    right: (binary_operation
-      left: (identifier)
-      operator: (operator)
-      right: (identifier)))
-  (assignment
-    left: (identifier)
-    right: (binary_operation
-      left: (identifier)
-      operator: (operator)
-      right: (identifier))))
+  (procedure
+    (procedure_name (identifier))
+    (main_block
+      (assignment
+        (identifier)
+        (multiplicative_expression
+          (multiplicative_expression
+            (parenthesized_expression
+              (additive_expression
+                (identifier)
+                (identifier)))
+            (identifier))
+          (identifier)))
+      (assignment
+        (identifier)
+        (exponential_expression
+          (identifier)
+          (identifier)))
+      (assignment
+        (identifier)
+        (multiplicative_expression
+          (identifier)
+          (number)))
+      (assignment
+        (identifier)
+        (logical_and_expression
+          (boolean)
+          (unary_expression (boolean))))
+      (assignment
+        (identifier)
+        (logical_or_expression
+          (parenthesized_expression
+            (relational_expression
+              (identifier)
+              (number)))
+          (logical_and_expression
+            (parenthesized_expression
+              (relational_expression
+                (identifier)
+                (number)))
+            (parenthesized_expression
+              (equality_expression
+                (identifier)
+                (number)))))))))
