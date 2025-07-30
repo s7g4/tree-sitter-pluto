@@ -25,9 +25,15 @@
 ; Keywords - Activity operations
 "initiate" @keyword.function
 "confirm" @keyword.function
-"and" @keyword.operator
 "wait" @keyword.function
 "until" @keyword.function
+
+; Operators - Logical
+[
+  "and"
+  "or"
+  "not"
+] @operator.logical
 
 ; Operators - Arithmetic
 [
@@ -50,13 +56,6 @@
   ">="
 ] @operator.comparison
 
-; Operators - Logical
-[
-  "and"
-  "or"
-  "not"
-] @operator.logical
-
 ; Assignment operator
 "=" @operator.assignment
 
@@ -77,36 +76,33 @@
 ; Units and measurements
 (unit) @type.builtin
 
-; Identifiers
-(identifier) @variable
+; Value with unit
+(value_with_unit
+  (number) @number
+  (unit) @type.builtin)
 
-; Procedure names
-(procedure_name (identifier) @function)
+; Function calls - specific patterns first
+(function_call 
+  (identifier) @function.call)
 
 ; Activity references
 (activity_reference (identifier) @function.call)
 
-; Property access
-(property_access 
-  (identifier) @variable
-  (identifier) @property) @variable.member
-
-; Function calls
-(function_call 
-  (identifier) @function.call)
+; Procedure names
+(procedure_name (identifier) @function)
 
 ; Parameter names in function calls
 (parameter 
   (identifier) @parameter
   "=" @operator.assignment)
 
-; Value with unit
-(value_with_unit
-  (number) @number
-  (unit) @type.builtin)
+; Property access
+(property_access 
+  (identifier) @variable
+  (identifier) @property) @variable.member
 
-; String literals
-(string) @string
+; General identifiers - must come last
+(identifier) @variable
 
 ; Error nodes for debugging
 (ERROR) @error
