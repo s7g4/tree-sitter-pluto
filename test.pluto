@@ -18,26 +18,26 @@ main
   initiate PowerOn();
   confirm SystemReady;
   initiate and confirm GyroCalibration(duration=30 s, precision=0.1 deg);
-  
+
   # Assignments with various expressions
   Temperature = Sensor.Ambient.Current;
   Result = (Alpha + Beta) * Gamma / Delta;
   Power = Base ** Exponent;
   Remainder = LargeNumber mod 1000;
   IsReady = true and not false;
-  
+
   # Complex logical expressions
   Status = (X > 0) or (Y < 100) and (Z != 50);
   Valid = System.Pressure > 1000 Pa and System.Pressure < 1200 Pa;
-  
+
   # Property access chains
   CurrentTemp = Sensors.Temperature.Primary.Value;
   SystemState = Control.Main.Status.Code;
-  
+
   # Function calls
   Calculate(input1, input2, mode="precise");
   Result = ProcessData(data=SensorReading, threshold=0.5);
-  
+
   # Conditional statements
   if Temperature > 60 degC then
     initiate CoolingSystem();
@@ -47,21 +47,21 @@ main
   else
     confirm TemperatureNormal;
   end if
-  
+
   # Loop statements
   while Status != "COMPLETE" do
     wait until DataReady;
     initiate ProcessStep();
   end while
-  
+
   for Sensor in SensorList do
     initiate and confirm Calibrate(sensor=Sensor);
   end for
-  
+
   # Nested expressions with parentheses
   ComplexCalc = ((A + B) * C) / (D - E);
   LogicalResult = not (X and Y) or (Z > W);
-  
+
   # Units and measurements
   Distance = 1000 m;
   Angle = 45 deg;
@@ -72,32 +72,32 @@ main
   Temperature = -10 degC;
   Pressure = 1013.25 Pa;
   Mass = 5.5 kg;
-  
+
   # String operations
   Message = "System initialized successfully";
   Command = "START_SEQUENCE";
-  
+
   # Boolean operations
   Flag1 = true;
   Flag2 = false;
   Combined = Flag1 and not Flag2;
-  
+
   # Mathematical operations with precedence
   Math1 = A + B * C;
   Math2 = (A + B) * C;
   Math3 = A ** B + C;
   Math4 = A + B ** C;
-  
+
   # Comparison operations
   Compare1 = X == Y;
   Compare2 = A != B;
   Compare3 = P < Q;
   Compare4 = M >= N;
   Compare5 = Value <> Target;
-  
+
   # Mixed expressions
   MixedResult = (Temp > 25 degC) and (Pressure < 1000 Pa) or SystemReady;
-  
+
 end main
 
 confirmation
@@ -107,7 +107,7 @@ confirmation
   confirm BatteryVoltage > 23.5 V;
   confirm System.Comm.Status == "ACTIVE";
   confirm DataCollection.ErrorRate < 0.1 %;
-  
+
   # Complex confirmations
   confirm (PowerLevel > 90 %) and (Temperature < 70 degC);
   confirm not ErrorFlag and SystemReady;
@@ -122,14 +122,14 @@ procedure AdvancedFeatures
 main
   # Nested function calls
   Result = ProcessData(GetSensorValue(sensor="primary"), threshold=CalculateThreshold());
-  
+
   # Complex property access
   Value = System.Subsystem.Component.Sensor.Reading.Current;
-  
+
   # Advanced mathematical expressions
   Calculation = (sin(Angle) * Radius) + (cos(Angle) * Height);
   Physics = (Mass * Velocity ** 2) / 2;
-  
+
   # Multi-level conditionals
   if System.Mode == "AUTO" then
     if Sensors.All.Status == "OK" then
@@ -143,7 +143,7 @@ main
   else
     confirm SafeMode;
   end if
-  
+
   # Nested loops
   for Subsystem in SystemList do
     while Subsystem.Status != "READY" do
@@ -151,22 +151,22 @@ main
       initiate Subsystem.Initialize();
     end while
   end for
-  
+
   # Complex unit expressions
   Velocity = Distance / Time;  # m/s
   Acceleration = Velocity / Time;  # m/s²
   Force = Mass * Acceleration;  # N (kg⋅m/s²)
   Energy = Force * Distance;  # J (N⋅m)
-  
+
   # String concatenation and operations
   FullMessage = "Status: " + SystemStatus + " at " + CurrentTime;
-  
+
   # Advanced boolean logic
   SystemOK = (PowerGood and TempOK and PressureOK) and not (ErrorFlag or WarningFlag);
-  
+
   # Parenthesized complex expressions
   Result = ((A + B) * (C - D)) / ((E + F) * (G - H));
-  
+
 end main
 end procedure
 
@@ -186,37 +186,37 @@ main
   # Single character identifiers
   A = 1;
   B = A + 1;
-  
+
   # Numbers with decimals
   Pi = 3.14159;
   SmallValue = 0.001;
   LargeValue = 1000000;
-  
+
   # Negative numbers
   NegativeTemp = -273.15 degC;
   Offset = -10;
-  
+
   # Empty parameter lists
   initiate Reset();
   confirm Status();
-  
+
   # Single parameter
   initiate SetValue(42);
-  
+
   # Multiple parameters
   initiate Configure(mode="auto", timeout=30 s, retries=3);
-  
+
   # Unary expressions
   Negative = -Value;
   Positive = +Value;
   NotFlag = not Flag;
-  
+
   # Chained comparisons (parsed as binary operations)
   InRange = (Value > MinValue) and (Value < MaxValue);
-  
+
   # Mixed units in expressions
   TotalTime = StartTime + Duration;
-  
+
 end main
 
 confirmation
@@ -243,18 +243,18 @@ main
   # Initialize system components
   initiate PowerSubsystem();  # Start power management
   initiate ThermalControl();  # Start thermal management
-  
+
   # Main processing loop
   while ProcessingActive do
     # Process data batch
     initiate ProcessBatch();
-    
+
     # Check for completion
     if BatchComplete then
       confirm BatchProcessed;
     end if
   end while
-  
+
   # Cleanup operations
   initiate Shutdown();  # Graceful shutdown
 end main

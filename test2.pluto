@@ -1,0 +1,27 @@
+namespace satcom.telemetry
+
+type Position struct {
+    Latitude  f64
+    Longitude f64
+    Altitude  f32
+}
+
+type PowerStatus struct {
+    BatteryLevel u8
+    SolarPanelDeployed bool
+    Charging bool
+}
+
+type SystemHealth struct {
+    CpuTemp f32
+    MemoryUsage u16
+    ErrorCode u16
+}
+
+type SatelliteStatus struct {
+    Timestamp u32
+    Position  Position
+    Power     PowerStatus
+    Health    SystemHealth
+    IsInSafeMode bool
+}
