@@ -1,18 +1,14 @@
-; =============================================================================
-; PLUTO Language Syntax Highlighting
-; =============================================================================
-
 ; Comments
 (comment) @comment
 
-; Keywords - Procedure structure
+; Keywords
 "procedure" @keyword.function
 "preconditions" @keyword
 "main" @keyword
 "confirmation" @keyword
 "end" @keyword
 
-; Keywords - Control flow
+; Keywords
 "if" @keyword.control.conditional
 "then" @keyword.control.conditional
 "elsif" @keyword.control.conditional
@@ -22,18 +18,26 @@
 "do" @keyword.control.repeat
 "in" @keyword.control.repeat
 
-; Keywords - Activity operations
+; Keywords
 "initiate" @keyword.function
 "confirm" @keyword.function
+"and" @keyword.operator
 "wait" @keyword.function
 "until" @keyword.function
 
-; Operators - Logical
+; Type system keywords
+"namespace" @keyword.other
+"type" @keyword.type
+"struct" @keyword.type
+
+; Primitive types
 [
-  "and"
-  "or"
-  "not"
-] @operator.logical
+  "u8" "u16" "u32" "u64"
+  "i8" "i16" "i32" "i64"
+  "f32" "f64"
+  "bool"
+  "string"
+] @type.builtin
 
 ; Operators - Arithmetic
 [
@@ -56,6 +60,13 @@
   ">="
 ] @operator.comparison
 
+; Operators - Logical
+[
+  "and"
+  "or"
+  "not"
+] @operator.logical
+
 ; Assignment operator
 "=" @operator.assignment
 
@@ -68,6 +79,14 @@
   "."
 ] @punctuation.delimiter
 
+; Brackets for struct definitions
+[
+  "{"
+  "}"
+  "["
+  "]"
+] @punctuation.bracket
+
 ; Literals
 (string) @string
 (number) @number
@@ -76,33 +95,52 @@
 ; Units and measurements
 (unit) @type.builtin
 
+; Identifiers
+(identifier) @variable
+
+; Procedure names
+(procedure_name (identifier) @function)
+
+; Activity references
+(activity_reference (identifier) @function.call)
+
+; Property access
+(property_access
+  (identifier) @variable
+  (identifier) @property) @variable.member
+
+; Function calls
+(function_call
+  (identifier) @function.call)
+
+; Parameter names in function calls
+(parameter
+  (identifier) @parameter
+  "=" @operator.assignment)
+
 ; Value with unit
 (value_with_unit
   (number) @number
   (unit) @type.builtin)
 
-; Function calls - specific patterns first
-(function_call 
-  (identifier) @function.call)
+; Type declarations
+(type_declaration
+  name: (identifier) @type)
 
-; Activity references
-(activity_reference (identifier) @function.call)
+; Struct fields
+(field_declaration
+  name: (identifier) @property
+  type: (type_annotation) @type)
 
-; Procedure names
-(procedure_name (identifier) @function)
+; Namespace declarations
+(namespace_declaration
+  path: (namespace_path) @module)
 
-; Parameter names in function calls
-(parameter 
-  (identifier) @parameter
-  "=" @operator.assignment)
+; Namespace paths
+(namespace_path (identifier) @module)
 
-; Property access
-(property_access 
-  (identifier) @variable
-  (identifier) @property) @variable.member
+; Type annotations
+(type_annotation) @type
 
-; General identifiers - must come last
-(identifier) @variable
-
-; Error nodes for debugging
+; Error
 (ERROR) @error
