@@ -12,28 +12,29 @@ module.exports = grammar({
   word: ($) => $.identifier,
 
   rules: {
-    // Support both official ECSS procedures and custom type definitions
     source_file: ($) =>
       repeat(choice($.procedure, $.namespace_declaration, $.type_declaration)),
 
     // Main procedure structure (OFFICIAL)
     procedure: ($) =>
       seq(
-        "procedure",
+        $.procedure_start,
         $.procedure_name,
         optional($.preconditions_block),
         $.main_block,
         optional($.confirmation_block),
-        "end",
-        "procedure",
+        $.procedure_end,
       ),
+
+    procedure_start: ($) => "procedure",
+    procedure_end: ($) => seq("end", "procedure"),
 
     procedure_name: ($) => $.identifier,
 
     // Block structures (OFFICIAL)
     preconditions_block: ($) =>
       seq(
-        "preconditions",
+        $.preconditions_start,
         repeat(
           choice(
             $.activity_call,
@@ -44,13 +45,15 @@ module.exports = grammar({
             $.expression_statement,
           ),
         ),
-        "end",
-        "preconditions",
+        $.preconditions_end,
       ),
+
+    preconditions_start: ($) => "preconditions",
+    preconditions_end: ($) => seq("end", "preconditions"),
 
     main_block: ($) =>
       seq(
-        "main",
+        $.main_start,
         repeat(
           choice(
             $.activity_call,
@@ -61,13 +64,15 @@ module.exports = grammar({
             $.expression_statement,
           ),
         ),
-        "end",
-        "main",
+        $.main_end,
       ),
+
+    main_start: ($) => "main",
+    main_end: ($) => seq("end", "main"),
 
     confirmation_block: ($) =>
       seq(
-        "confirmation",
+        $.confirmation_start,
         repeat(
           choice(
             $.activity_call,
@@ -78,9 +83,11 @@ module.exports = grammar({
             $.expression_statement,
           ),
         ),
-        "end",
-        "confirmation",
+        $.confirmation_end,
       ),
+
+    confirmation_start: ($) => "confirmation",
+    confirmation_end: ($) => seq("end", "confirmation"),
 
     // Statements (OFFICIAL)
     statement: ($) =>
@@ -143,9 +150,9 @@ module.exports = grammar({
     // Conditional statements (OFFICIAL)
     conditional: ($) =>
       seq(
-        "if",
+        $.if_start,
         $.expression,
-        "then",
+        $.then_keyword,
         repeat(
           choice(
             $.activity_call,
@@ -158,15 +165,18 @@ module.exports = grammar({
         ),
         repeat($.elsif_clause),
         optional($.else_clause),
-        "end",
-        "if",
+        $.if_end,
       ),
+
+    if_start: ($) => "if",
+    then_keyword: ($) => "then",
+    if_end: ($) => seq("end", "if"),
 
     elsif_clause: ($) =>
       seq(
-        "elsif",
+        $.elsif_keyword,
         $.expression,
-        "then",
+        $.then_keyword,
         repeat(
           choice(
             $.activity_call,
@@ -179,9 +189,11 @@ module.exports = grammar({
         ),
       ),
 
+    elsif_keyword: ($) => "elsif",
+
     else_clause: ($) =>
       seq(
-        "else",
+        $.else_keyword,
         repeat(
           choice(
             $.activity_call,
@@ -193,15 +205,17 @@ module.exports = grammar({
           ),
         ),
       ),
+
+    else_keyword: ($) => "else",
 
     // Loop statements (OFFICIAL)
     loop: ($) => choice($.while_loop, $.for_loop),
 
     while_loop: ($) =>
       seq(
-        "while",
+        $.while_start,
         $.expression,
-        "do",
+        $.do_keyword,
         repeat(
           choice(
             $.activity_call,
@@ -212,17 +226,20 @@ module.exports = grammar({
             $.expression_statement,
           ),
         ),
-        "end",
-        "while",
+        $.while_end,
       ),
+
+    while_start: ($) => "while",
+    do_keyword: ($) => "do",
+    while_end: ($) => seq("end", "while"),
 
     for_loop: ($) =>
       seq(
-        "for",
+        $.for_start,
         $.identifier,
-        "in",
+        $.in_keyword,
         $.expression,
-        "do",
+        $.do_keyword,
         repeat(
           choice(
             $.activity_call,
@@ -233,9 +250,12 @@ module.exports = grammar({
             $.expression_statement,
           ),
         ),
-        "end",
-        "for",
+        $.for_end,
       ),
+
+    for_start: ($) => "for",
+    in_keyword: ($) => "in",
+    for_end: ($) => seq("end", "for"),
 
     // Namespace declaration (CUSTOM)
     namespace_declaration: ($) =>
