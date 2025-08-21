@@ -15,7 +15,6 @@ module.exports = grammar({
     source_file: ($) =>
       repeat(choice($.procedure, $.namespace_declaration, $.type_declaration)),
 
-    // Main procedure structure (OFFICIAL)
     procedure: ($) =>
       seq(
         $.procedure_start,
@@ -31,7 +30,6 @@ module.exports = grammar({
 
     procedure_name: ($) => $.identifier,
 
-    // Block structures (OFFICIAL)
     preconditions_block: ($) =>
       seq(
         $.preconditions_start,
@@ -89,7 +87,6 @@ module.exports = grammar({
     confirmation_start: ($) => "confirmation",
     confirmation_end: ($) => seq("end", "confirmation"),
 
-    // Statements (OFFICIAL)
     statement: ($) =>
       choice(
         $.activity_call,
@@ -100,11 +97,9 @@ module.exports = grammar({
         $.expression_statement,
       ),
 
-    // Wait until statement (OFFICIAL)
     wait_until_statement: ($) =>
       seq("wait", "until", $.expression, optional(";")),
 
-    // Activity calls (OFFICIAL)
     activity_call: ($) =>
       choice($.initiate_and_confirm, $.initiate_only, $.confirm_only),
 
@@ -144,10 +139,8 @@ module.exports = grammar({
     parameter: ($) =>
       choice($.expression, seq($.identifier, "=", $.expression)),
 
-    // Assignment (OFFICIAL)
     assignment: ($) => seq($.identifier, "=", $.expression, optional(";")),
 
-    // Conditional statements (OFFICIAL)
     conditional: ($) =>
       seq(
         $.if_start,
@@ -208,7 +201,6 @@ module.exports = grammar({
 
     else_keyword: ($) => "else",
 
-    // Loop statements (OFFICIAL)
     loop: ($) => choice($.while_loop, $.for_loop),
 
     while_loop: ($) =>
@@ -257,7 +249,6 @@ module.exports = grammar({
     in_keyword: ($) => "in",
     for_end: ($) => seq("end", "for"),
 
-    // Namespace declaration (CUSTOM)
     namespace_declaration: ($) =>
       seq(
         "namespace",
@@ -269,7 +260,6 @@ module.exports = grammar({
 
     namespace_path: ($) => seq($.identifier, repeat(seq(".", $.identifier))),
 
-    // Type declarations (CUSTOM)
     type_declaration: ($) => seq("type", $.identifier, $.type_definition),
 
     type_definition: ($) =>
@@ -301,10 +291,8 @@ module.exports = grammar({
 
     array_type: ($) => seq("[", $.type_annotation, ";", $.number, "]"),
 
-    // Expression statement - lowest precedence
     expression_statement: ($) => prec(-1, seq($.expression, optional(";"))),
 
-    // Expression hierarchy (OFFICIAL)
     expression: ($) => $.logical_or_expression,
 
     logical_or_expression: ($) =>
@@ -406,11 +394,9 @@ module.exports = grammar({
         $.value_with_unit,
       ),
 
-    // Property access (OFFICIAL)
     property_access: ($) =>
       prec.left(9, seq($.identifier, repeat1(seq(".", $.identifier)))),
 
-    // Function calls (OFFICIAL)
     function_call: ($) =>
       prec.left(
         9,
@@ -424,10 +410,8 @@ module.exports = grammar({
 
     parenthesized_expression: ($) => seq("(", $.expression, ")"),
 
-    // Value with unit (OFFICIAL)
     value_with_unit: ($) => seq($.number, $.unit),
 
-    // Literals (OFFICIAL)
     number: ($) =>
       token(
         seq(
@@ -445,7 +429,6 @@ module.exports = grammar({
 
     boolean: ($) => choice("true", "false"),
 
-    // Units for measurements (OFFICIAL - comprehensive space operations units)
     unit: ($) =>
       token(
         choice(
@@ -637,10 +620,8 @@ module.exports = grammar({
         ),
       ),
 
-    // Identifiers (OFFICIAL)
     identifier: ($) => /[A-Za-z_][A-Za-z0-9_]*/,
 
-    // Comments (OFFICIAL)
     comment: ($) => token(seq("#", /.*/)),
   },
 });
