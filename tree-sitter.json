@@ -6,11 +6,10 @@
       "camelcase": "Pluto",
       "title": "PLUTO",
       "scope": "source.pluto",
-      "file-types": [
-        "pluto"
-      ],
+      "file-types": ["pluto"],
       "injection-regex": "^pluto$",
-      "class-name": "TreeSitterPluto"
+      "class-name": "TreeSitterPluto",
+      "highlights": "queries/highlights.scm"
     }
   ],
   "metadata": {

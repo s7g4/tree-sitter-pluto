@@ -125,16 +125,16 @@
 
 ; Type declarations
 (type_declaration
-  name: (identifier) @type)
+  (identifier) @type)
 
 ; Struct fields
 (field_declaration
-  name: (identifier) @property
-  type: (type_annotation) @type)
+  (identifier) @property
+  (type_annotation) @type)
 
 ; Namespace declarations
 (namespace_declaration
-  path: (namespace_path) @module)
+  (namespace_path) @module)
 
 ; Namespace paths
 (namespace_path (identifier) @module)

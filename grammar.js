@@ -242,7 +242,9 @@ module.exports = grammar({
       seq(
         "namespace",
         $.namespace_path,
+        "{",
         repeat(choice($.type_declaration, $.namespace_declaration)),
+        "}",
       ),
 
     namespace_path: ($) => seq($.identifier, repeat(seq(".", $.identifier))),
