@@ -7,6 +7,7 @@ module.exports = grammar({
     [$.initiate_only],
     [$.initiate_and_confirm],
     [$.activity_reference, $.primary_expression],
+    [$.value_of_expression, $.property_access],
   ],
 
   word: ($) => $.identifier,
@@ -152,16 +153,7 @@ module.exports = grammar({
         $.if_keyword,
         $.expression,
         $.then_keyword,
-        repeat(
-          choice(
-            $.activity_call,
-            $.wait_until_statement,
-            $.assignment,
-            $.conditional,
-            $.loop,
-            $.expression_statement,
-          ),
-        ),
+        repeat($.statement),
         repeat($.elsif_clause),
         optional($.else_clause),
         $.end_if_keyword,
@@ -172,38 +164,11 @@ module.exports = grammar({
     end_if_keyword: ($) => seq("end", "if"),
 
     elsif_clause: ($) =>
-      seq(
-        $.elsif_keyword,
-        $.expression,
-        $.then_keyword,
-        repeat(
-          choice(
-            $.activity_call,
-            $.wait_until_statement,
-            $.assignment,
-            $.conditional,
-            $.loop,
-            $.expression_statement,
-          ),
-        ),
-      ),
+      seq($.elsif_keyword, $.expression, $.then_keyword, repeat($.statement)),
 
     elsif_keyword: ($) => "elsif",
 
-    else_clause: ($) =>
-      seq(
-        $.else_keyword,
-        repeat(
-          choice(
-            $.activity_call,
-            $.wait_until_statement,
-            $.assignment,
-            $.conditional,
-            $.loop,
-            $.expression_statement,
-          ),
-        ),
-      ),
+    else_clause: ($) => seq($.else_keyword, repeat($.statement)),
 
     else_keyword: ($) => "else",
 
@@ -214,16 +179,7 @@ module.exports = grammar({
         $.while_keyword,
         $.expression,
         $.do_keyword,
-        repeat(
-          choice(
-            $.activity_call,
-            $.wait_until_statement,
-            $.assignment,
-            $.conditional,
-            $.loop,
-            $.expression_statement,
-          ),
-        ),
+        repeat($.statement),
         $.end_while_keyword,
       ),
 
@@ -238,16 +194,7 @@ module.exports = grammar({
         $.in_keyword,
         $.expression,
         $.do_keyword,
-        repeat(
-          choice(
-            $.activity_call,
-            $.wait_until_statement,
-            $.assignment,
-            $.conditional,
-            $.loop,
-            $.expression_statement,
-          ),
-        ),
+        repeat($.statement),
         $.end_for_keyword,
       ),
 
@@ -281,7 +228,7 @@ module.exports = grammar({
     struct_keyword: ($) => "struct",
 
     field_declaration: ($) =>
-      seq($.identifier, $.type_annotation, optional(",")),
+      seq($.identifier, ":", $.type_annotation, optional(",")),
 
     type_annotation: ($) =>
       choice($.primitive_type, $.identifier, $.array_type),
@@ -409,11 +356,21 @@ module.exports = grammar({
         $.number,
         $.string,
         $.boolean,
+        $.value_of_expression,
         $.property_access,
         $.function_call,
         $.parenthesized_expression,
         $.value_with_unit,
       ),
+
+    // Add the missing "value of" expression
+    value_of_expression: ($) =>
+      prec(
+        10,
+        seq($.value_of_keyword, choice($.identifier, $.property_access)),
+      ),
+
+    value_of_keyword: ($) => seq("value", "of"),
 
     property_access: ($) =>
       prec.left(9, seq($.identifier, repeat1(seq(".", $.identifier)))),
@@ -630,8 +587,6 @@ module.exports = grammar({
           "mol/l",
           "mg/l",
           "ug/m3",
-          "ppm",
-          "ppb",
 
           // Radiation
           "Gy",
