@@ -98,38 +98,44 @@ module.exports = grammar({
       ),
 
     wait_until_statement: ($) =>
-      seq("wait", "until", $.expression, optional(";")),
+      seq($.wait_until_keyword, $.expression, optional(";")),
+
+    wait_until_keyword: ($) => seq("wait", "until"),
 
     activity_call: ($) =>
       choice($.initiate_and_confirm, $.initiate_only, $.confirm_only),
 
     initiate_and_confirm: ($) =>
       seq(
-        "initiate",
-        "and",
-        "confirm",
+        $.initiate_and_confirm_keyword,
         $.activity_reference,
         optional($.parameter_list),
         optional(";"),
       ),
+
+    initiate_and_confirm_keyword: ($) => seq("initiate", "and", "confirm"),
 
     initiate_only: ($) =>
       seq(
-        "initiate",
+        $.initiate_keyword,
         $.activity_reference,
         optional($.parameter_list),
         optional(";"),
       ),
 
+    initiate_keyword: ($) => "initiate",
+
     confirm_only: ($) =>
       seq(
-        "confirm",
+        $.confirm_keyword,
         choice(
           prec(2, seq($.activity_reference, optional($.parameter_list))),
           prec(1, $.expression),
         ),
         optional(";"),
       ),
+
+    confirm_keyword: ($) => "confirm",
 
     activity_reference: ($) => choice($.identifier, $.property_access),
 
@@ -143,7 +149,7 @@ module.exports = grammar({
 
     conditional: ($) =>
       seq(
-        $.if_start,
+        $.if_keyword,
         $.expression,
         $.then_keyword,
         repeat(
@@ -158,12 +164,12 @@ module.exports = grammar({
         ),
         repeat($.elsif_clause),
         optional($.else_clause),
-        $.if_end,
+        $.end_if_keyword,
       ),
 
-    if_start: ($) => "if",
+    if_keyword: ($) => "if",
     then_keyword: ($) => "then",
-    if_end: ($) => seq("end", "if"),
+    end_if_keyword: ($) => seq("end", "if"),
 
     elsif_clause: ($) =>
       seq(
@@ -205,7 +211,7 @@ module.exports = grammar({
 
     while_loop: ($) =>
       seq(
-        $.while_start,
+        $.while_keyword,
         $.expression,
         $.do_keyword,
         repeat(
@@ -218,16 +224,16 @@ module.exports = grammar({
             $.expression_statement,
           ),
         ),
-        $.while_end,
+        $.end_while_keyword,
       ),
 
-    while_start: ($) => "while",
+    while_keyword: ($) => "while",
     do_keyword: ($) => "do",
-    while_end: ($) => seq("end", "while"),
+    end_while_keyword: ($) => seq("end", "while"),
 
     for_loop: ($) =>
       seq(
-        $.for_start,
+        $.for_keyword,
         $.identifier,
         $.in_keyword,
         $.expression,
@@ -242,30 +248,37 @@ module.exports = grammar({
             $.expression_statement,
           ),
         ),
-        $.for_end,
+        $.end_for_keyword,
       ),
 
-    for_start: ($) => "for",
+    for_keyword: ($) => "for",
     in_keyword: ($) => "in",
-    for_end: ($) => seq("end", "for"),
+    end_for_keyword: ($) => seq("end", "for"),
 
     namespace_declaration: ($) =>
       seq(
-        "namespace",
+        $.namespace_keyword,
         $.namespace_path,
         "{",
         repeat(choice($.type_declaration, $.namespace_declaration)),
         "}",
       ),
 
+    namespace_keyword: ($) => "namespace",
     namespace_path: ($) => seq($.identifier, repeat(seq(".", $.identifier))),
 
-    type_declaration: ($) => seq("type", $.identifier, $.type_definition),
+    type_declaration: ($) =>
+      seq($.type_keyword, $.identifier, $.type_definition),
+
+    type_keyword: ($) => "type",
 
     type_definition: ($) =>
       choice($.struct_type, $.primitive_type, $.array_type),
 
-    struct_type: ($) => seq("struct", "{", repeat($.field_declaration), "}"),
+    struct_type: ($) =>
+      seq($.struct_keyword, "{", repeat($.field_declaration), "}"),
+
+    struct_keyword: ($) => "struct",
 
     field_declaration: ($) =>
       seq($.identifier, $.type_annotation, optional(",")),
@@ -300,18 +313,22 @@ module.exports = grammar({
         1,
         choice(
           $.logical_and_expression,
-          seq($.logical_or_expression, "or", $.logical_and_expression),
+          seq($.logical_or_expression, $.or_keyword, $.logical_and_expression),
         ),
       ),
+
+    or_keyword: ($) => "or",
 
     logical_and_expression: ($) =>
       prec.left(
         2,
         choice(
           $.equality_expression,
-          seq($.logical_and_expression, "and", $.equality_expression),
+          seq($.logical_and_expression, $.and_keyword, $.equality_expression),
         ),
       ),
+
+    and_keyword: ($) => "and",
 
     equality_expression: ($) =>
       prec.left(
@@ -359,11 +376,13 @@ module.exports = grammar({
           $.exponential_expression,
           seq(
             $.multiplicative_expression,
-            choice("*", "/", "mod"),
+            choice("*", "/", $.mod_keyword),
             $.exponential_expression,
           ),
         ),
       ),
+
+    mod_keyword: ($) => "mod",
 
     exponential_expression: ($) =>
       prec.right(
@@ -377,10 +396,12 @@ module.exports = grammar({
     unary_expression: ($) =>
       choice(
         $.primary_expression,
-        prec(8, seq("not", $.unary_expression)),
+        prec(8, seq($.not_keyword, $.unary_expression)),
         prec(8, seq("-", $.unary_expression)),
         prec(8, seq("+", $.unary_expression)),
       ),
+
+    not_keyword: ($) => "not",
 
     primary_expression: ($) =>
       choice(
@@ -427,7 +448,10 @@ module.exports = grammar({
         seq("'", repeat(choice(/[^'\\]/, seq("\\", /./))), "'"),
       ),
 
-    boolean: ($) => choice("true", "false"),
+    boolean: ($) => choice($.true_keyword, $.false_keyword),
+
+    true_keyword: ($) => "true",
+    false_keyword: ($) => "false",
 
     unit: ($) =>
       token(

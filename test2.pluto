@@ -8,3 +8,4 @@ initiate and confirm Switch on Gyro Converter;
     initiate and confirm Gyro5 Fine Mode;
 end main
 end procedure
+galaxy increases speed := 10 m/s
