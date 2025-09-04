@@ -1,0 +1,20 @@
+procedure
+declare
+event Manoeuvre Damping Failed,
+end declare
+    main
+    wait for Crosstrack Error < 5 arcmin
+    timeout Manoeuvre End Time + 100 s
+    raise event Manoeuvre Damping Failed;
+end main
+    <....>
+watchdog
+    initiate and confirm step Recover Damping Failure
+    preconditions
+     wait for event Manoeuvre Damping Failed
+    end preconditions
+    <……>
+    end step;
+end watchdog
+    <....>
+end procedure

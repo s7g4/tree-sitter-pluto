@@ -20,9 +20,11 @@ module.exports = grammar({
       seq(
         $.procedure_start,
         $.procedure_name,
+        optional($.declare_block),
         optional($.preconditions_block),
-        $.main_block,
+        optional($.main_block),
         optional($.confirmation_block),
+        optional($.watchdog_block),
         $.procedure_end,
       ),
 
@@ -31,6 +33,69 @@ module.exports = grammar({
 
     procedure_name: ($) => $.identifier,
 
+    declare_block: ($) =>
+      seq($.declare_start, repeat($.declaration), $.declare_end),
+
+    declare_start: ($) => "declare",
+    declare_end: ($) => seq("end", "declare"),
+
+    declaration: ($) => choice($.event_declaration),
+
+    event_declaration: ($) =>
+      seq(
+        $.event_keyword,
+        $.event_name,
+        optional($.described_by_clause),
+        optional(","),
+      ),
+
+    event_keyword: ($) => "event",
+    event_name: ($) => $.identifier,
+    described_by_clause: ($) => seq($.described_by_keyword, $.quoted_string),
+    described_by_keyword: ($) => seq("described", "by"),
+
+    watchdog_block: ($) =>
+      seq(
+        $.watchdog_start,
+        repeat(
+          choice(
+            $.activity_call,
+            $.wait_until_statement,
+            $.assignment,
+            $.conditional,
+            $.loop,
+            $.expression_statement,
+            $.step_block,
+          ),
+        ),
+        $.watchdog_end,
+      ),
+
+    watchdog_start: ($) => "watchdog",
+    watchdog_end: ($) => seq("end", "watchdog"),
+
+    step_block: ($) =>
+      seq(
+        $.step_start,
+        $.step_name,
+        optional($.preconditions_block),
+        repeat(
+          choice(
+            $.activity_call,
+            $.wait_until_statement,
+            $.assignment,
+            $.conditional,
+            $.loop,
+            $.expression_statement,
+          ),
+        ),
+        $.step_end,
+      ),
+
+    step_start: ($) => seq("initiate", "and", "confirm", "step"),
+    step_end: ($) => seq("end", "step"),
+    step_name: ($) => $.identifier,
+
     preconditions_block: ($) =>
       seq(
         $.preconditions_start,
@@ -38,6 +103,9 @@ module.exports = grammar({
           choice(
             $.activity_call,
             $.wait_until_statement,
+            $.wait_for_statement,
+            $.timeout_statement,
+            $.raise_event_statement,
             $.assignment,
             $.conditional,
             $.loop,
@@ -57,6 +125,9 @@ module.exports = grammar({
           choice(
             $.activity_call,
             $.wait_until_statement,
+            $.wait_for_statement,
+            $.timeout_statement,
+            $.raise_event_statement,
             $.assignment,
             $.conditional,
             $.loop,
@@ -76,6 +147,9 @@ module.exports = grammar({
           choice(
             $.activity_call,
             $.wait_until_statement,
+            $.wait_for_statement,
+            $.timeout_statement,
+            $.raise_event_statement,
             $.assignment,
             $.conditional,
             $.loop,
@@ -92,6 +166,9 @@ module.exports = grammar({
       choice(
         $.activity_call,
         $.wait_until_statement,
+        $.wait_for_statement,
+        $.timeout_statement,
+        $.raise_event_statement,
         $.assignment,
         $.conditional,
         $.loop,
@@ -102,6 +179,21 @@ module.exports = grammar({
       seq($.wait_until_keyword, $.expression, optional(";")),
 
     wait_until_keyword: ($) => seq("wait", "until"),
+
+    wait_for_statement: ($) =>
+      seq($.wait_for_keyword, $.expression, optional(";")),
+
+    wait_for_keyword: ($) => seq("wait", "for"),
+
+    timeout_statement: ($) =>
+      seq($.timeout_keyword, $.expression, optional(";")),
+
+    timeout_keyword: ($) => "timeout",
+
+    raise_event_statement: ($) =>
+      seq($.raise_event_keyword, $.identifier, optional(";")),
+
+    raise_event_keyword: ($) => seq("raise", "event"),
 
     activity_call: ($) =>
       choice($.initiate_and_confirm, $.initiate_only, $.confirm_only),
@@ -403,6 +495,13 @@ module.exports = grammar({
       choice(
         seq('"', repeat(choice(/[^"\\]/, seq("\\", /./))), '"'),
         seq("'", repeat(choice(/[^'\\]/, seq("\\", /./))), "'"),
+      ),
+
+    quoted_string: ($) =>
+      choice(
+        seq('"', repeat(choice(/[^"\\]/, seq("\\", /./))), '"'),
+        seq("'", repeat(choice(/[^'\\]/, seq("\\", /./))), "'"),
+        seq(token("ʺ"), repeat(choice(/[^ʺ\\]/, seq("\\", /./))), token("ʺ")),
       ),
 
     boolean: ($) => choice($.true_keyword, $.false_keyword),
